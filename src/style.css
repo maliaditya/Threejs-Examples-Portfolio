@@ -1,0 +1,158 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body
+{
+    overflow: hidden;
+}
+
+.webgl
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
+}
+
+
+/* custom CSS */
+.lil-gui {
+    background-color: #2c2c2c; /* Dark background */
+    color: #ffffff; /* White text color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    padding: 10px; /* Inner padding */
+    transition: all 0.3s ease; /* Smooth transitions */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .lil-gui {
+    width: 10%; /* Full width on small screens */
+    top: 10px; /* Less margin from the top */
+    
+  }
+.lil-gui.autoPlace {
+    width: 50%;
+    right: 0;
+    top: 30px;
+}
+
+}
+
+
+
+
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevents scrolling */
+}
+
+canvas.webgl {
+    width: 100vw;
+    height: 100vh;
+    display: block; /* Removes extra space below the canvas */
+    background: black; /* Ensure the canvas has a black background */
+}
+
+.header {
+    position: absolute;
+    top: 20px;
+    left: 20px; /* Change from right to left */
+    color: white; /* White text for better contrast */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Optional: add a shadow for better visibility */
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.footer {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 40px); /* Adjust width for padding */
+}
+
+.left, .right {
+    display: flex;
+    align-items: center;
+}
+
+.youtube, .social {
+    text-decoration: none;
+    color: #0073e6; /* Change color as needed */
+    font-size: 1.2em;
+    margin: 0 10px;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* Optional: add a background to the header and footer */
+.header, .footer {
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    padding: 5px; /* Add padding for better spacing */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em; /* Smaller font for small screens */
+    }
+
+    .header h2 {
+        font-size: 1.2em; /* Smaller font for small screens */
+    }
+
+    .footer {
+       
+        bottom: 10px; /* Adjust spacing */
+    }
+
+    .youtube, .social {
+        font-size: 0.9em; /* Smaller font for small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5em; /* Even smaller for very small screens */
+    }
+
+    .header h2 {
+        font-size: 1em; /* Even smaller for very small screens */
+    }
+
+    .youtube, .social {
+        font-size: 0.7em; /* Even smaller for very small screens */
+    }
+    .icon{
+        width: 15px;
+    height: 15px;
+    }
+
+    .header, .footer {
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+}
