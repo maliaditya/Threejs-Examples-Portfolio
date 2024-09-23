@@ -31,7 +31,7 @@ export default class SceneManager extends EventEmitter
 
         this.setTriggerSceneInstance()
 
-        this.trigger('ragingSeaScene')
+        this.trigger('Raging_Sea')
     }
 
     setScenes(sceneName,SceneClass)
