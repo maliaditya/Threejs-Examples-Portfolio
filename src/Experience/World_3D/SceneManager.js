@@ -31,8 +31,25 @@ export default class SceneManager extends EventEmitter
 
         this.setTriggerSceneInstance()
 
-        this.trigger('Raging_Sea')
+        if (!window.location.hash) 
+        {
+            this.trigger('Raging_Sea'); // Default scene
+        } 
+        else 
+        {
+            this.handleHashChange(); // Handle existing hash
+        }
+
+
     }
+
+    handleHashChange(){
+        const sceneName = window.location.hash.replace('#', ''); // Extract scene name from hash
+        if (sceneName && this.sceneManager[sceneName]) {
+            this.trigger(sceneName); // Trigger the scene if it exists in sceneManager
+        }
+    };
+
 
     setScenes(sceneName,SceneClass)
     {
@@ -46,7 +63,7 @@ export default class SceneManager extends EventEmitter
                 this.destroy(); // Assuming this destroys the current scene
                 this.sceneManager[sceneName].obj = new SceneClass();
                 this.currentScene = sceneName
-
+                    
                             // Reset uTime when a new scene is created
            const currentSceneObj = this.sceneManager[sceneName].obj;
             if (currentSceneObj.material && 
@@ -75,7 +92,7 @@ export default class SceneManager extends EventEmitter
                     };
                      this.debug.ui.add(this.obj, category).name(`${category}`);
                     
-                    if(this.active = window.location.hash === `#${category}`)
+                    if( window.location.hash === `#${category}`)
                     {
                          this.trigger(category)
                     }
