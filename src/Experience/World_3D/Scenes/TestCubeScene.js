@@ -7,12 +7,10 @@ export default class TestCubeScene
         this.time = new Experience().time
         this.cube = new Cube()
         this.update()
-
     }
 
     update()
     {
-        console.log("TestCubeScene",this.time.elapsed)
         this.cube.update()
     }
 }

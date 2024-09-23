@@ -5,10 +5,11 @@ export default class GalaxyScene
         // all objects in scene
         this.particle = new Particle()
         this.update()
+        this.particle.time.reset()
     }
 
     update() 
-    {
+    {   
         this.particle.update()
     }
 

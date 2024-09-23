@@ -5,6 +5,7 @@ import * as THREE from 'three'
 // scenes
 import TestCubeScene from "./Scenes/TestCubeScene";
 import GalaxyScene from "./Scenes/GalaxyScene";
+import RagingSeaScene from "./Scenes/RagingSeaScene";
 
 export default class SceneManager extends EventEmitter
 {
@@ -17,16 +18,20 @@ export default class SceneManager extends EventEmitter
         this.sceneManager = this.experience.sceneManager
         this.debug = this.experience.debug
         this.scene = this.experience.scene
+        this.time = this.experience.time
+        this.camera =  this.experience.camera
         this.currentScene = null
 
         // sceneManager will store objects 
         this.sceneManager = {}
         
-        this.setScenes('testCubeScene',TestCubeScene);    
-        this.setScenes('galaxyScene',GalaxyScene);
+        this.setScenes('Galaxy',GalaxyScene);
+        this.setScenes('Raging_Sea', RagingSeaScene);
+        this.setScenes('Test_Cube',TestCubeScene);    
 
         this.setTriggerSceneInstance()
-        this.trigger('galaxyScene')
+
+        this.trigger('ragingSeaScene')
     }
 
     setScenes(sceneName,SceneClass)
@@ -40,7 +45,15 @@ export default class SceneManager extends EventEmitter
             if (!this.sceneManager[sceneName].obj) {
                 this.destroy(); // Assuming this destroys the current scene
                 this.sceneManager[sceneName].obj = new SceneClass();
-                 this.currentScene = sceneName
+                this.currentScene = sceneName
+
+                            // Reset uTime when a new scene is created
+           const currentSceneObj = this.sceneManager[sceneName].obj;
+            if (currentSceneObj.material && 
+                currentSceneObj.material.uniforms && 
+                currentSceneObj.material.uniforms.uTime) {
+                currentSceneObj.material.uniforms.uTime.value = 0; // Reset time
+            }
             }
         });
         console.log("setScenes this.currentScene",this.currentScene)
@@ -60,7 +73,7 @@ export default class SceneManager extends EventEmitter
                         window.location.hash = `#${category}`;
                         this.trigger(category)
                     };
-                     this.debug.ui.add(this.obj, category).name(`Trigger ${category}`);
+                     this.debug.ui.add(this.obj, category).name(`${category}`);
                     
                     if(this.active = window.location.hash === `#${category}`)
                     {
@@ -134,6 +147,9 @@ export default class SceneManager extends EventEmitter
         this.scene.remove(object);
     });
 
+    // reset camera positions
+    this.resetCamera()
+
     console.log("Objects removed from scene:", objectsToRemove);
 }
 
@@ -148,6 +164,11 @@ disposeMaterial(material) {
 
     // Dispose of the material itself
     material.dispose();
+}
+
+resetCamera() {
+    this.camera.perspectiveCamera.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z)
+    this.camera.update()
 }
 
 }
