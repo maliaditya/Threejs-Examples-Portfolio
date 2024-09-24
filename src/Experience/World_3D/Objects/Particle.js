@@ -14,9 +14,9 @@ export default class Particle
 
 
     this.parameters = {}
-    this.parameters.count = 100000
+    this.parameters.count = 500000
     this.parameters.size = 0.005
-    this.parameters.radius = 5
+    this.parameters.radius = 30
     this.parameters.branches = 3
     this.parameters.spin = 1
     this.parameters.randomness = 0.5
