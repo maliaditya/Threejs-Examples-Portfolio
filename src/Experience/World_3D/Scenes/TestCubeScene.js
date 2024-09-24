@@ -9,6 +9,10 @@ export default class TestCubeScene
         this.update()
     }
 
+    destroy()
+    {
+        
+    }
     update()
     {
         this.cube.update()

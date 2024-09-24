@@ -18,6 +18,11 @@ export default class RagingSea
          this.camera.update()
     }
 
+    destroy()
+    {
+        
+    }
+
     update()
     {
         this.water.update()

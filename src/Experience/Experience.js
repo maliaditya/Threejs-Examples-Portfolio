@@ -6,7 +6,9 @@ import Camera from './Setup/Camera'
 import Sizes from './Utils/Sizes'
 import Debug from './Utils/Debug'
 import SceneManager from './World_3D/SceneManager'
+import Resources from './World_3D/Resources/Resources'
 import Time from './Utils/Time'
+import sources from './World_3D/Resources/sources'
 let instance = null
 
 export default class Experience
@@ -26,21 +28,24 @@ export default class Experience
 		this.scene  = new THREE.Scene()
 		this.camera = new Camera()
 		this.renderer = new Renderer()
-		this.sceneManager = new SceneManager()
-	
-		this.sceneManager.on('TestCubeScene',()=>{
-             
-        })
+		this.resources = new Resources(sources)
 
+		this.resourcesLoaded = false;
 
 		this.sizes.on('resize', ()=>{
-			this.resize();
-		})
-		
+				this.resize();
+				
+			})
+			
 		this.time.on('tick', () =>
-        {
-            this.update()
-        })
+				{
+					this.update()
+				})
+
+		this.resources.on('ready',()=>{
+			this.sceneManager = new SceneManager()
+			this.resourcesLoaded = true
+		})
 	}
 
 	resize()
@@ -53,7 +58,11 @@ export default class Experience
 	{
 		this.camera.update();
 		this.renderer.update();
-		this.sceneManager.update();
+
+		if(this.resourcesLoaded)
+		{
+			this.sceneManager.update();
+		}
 	}
 
 

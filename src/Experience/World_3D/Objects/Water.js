@@ -65,7 +65,6 @@ export default class Water
     update()
     {
         this.material.uniforms.uTime.value = this.time.elapsedTime
-        console.log("this.elapsedTime ",this.time.elapsedTime)
 
     }
 

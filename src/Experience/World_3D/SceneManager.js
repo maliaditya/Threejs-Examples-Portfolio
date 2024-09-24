@@ -6,6 +6,8 @@ import * as THREE from 'three'
 import TestCubeScene from "./Scenes/TestCubeScene";
 import GalaxyScene from "./Scenes/GalaxyScene";
 import RagingSeaScene from "./Scenes/RagingSeaScene";
+import HolographicCanineScene from "./Scenes/HolographicCanineScene";
+import CosmicShivaScene from "./Scenes/CosmicShivaScene";
 
 export default class SceneManager extends EventEmitter
 {
@@ -27,20 +29,21 @@ export default class SceneManager extends EventEmitter
         
         this.setScenes('Galaxy',GalaxyScene);
         this.setScenes('Raging_Sea', RagingSeaScene);
-        this.setScenes('Test_Cube',TestCubeScene);    
+        //this.setScenes('CosmicShiva',CosmicShivaScene )
+        this.setScenes('ModelLoading',HolographicCanineScene)
+
+        //this.setScenes('Test_Cube',TestCubeScene);    
 
         this.setTriggerSceneInstance()
 
         if (!window.location.hash) 
         {
-            this.trigger('Raging_Sea'); // Default scene
+            this.trigger('Galaxy'); // Default scene
         } 
         else 
         {
             this.handleHashChange(); // Handle existing hash
         }
-
-
     }
 
     handleHashChange(){
@@ -73,7 +76,6 @@ export default class SceneManager extends EventEmitter
             }
             }
         });
-        console.log("setScenes this.currentScene",this.currentScene)
 
     }
 
@@ -125,9 +127,12 @@ export default class SceneManager extends EventEmitter
 
     // Remove references to the current scene from the scene manager
     if (this.currentScene) {
+        this.sceneManager[this.currentScene].obj.destroy()
         this.sceneManager[this.currentScene].obj = null;
         this.currentScene = null;
     }
+
+    
 
     // Create an array to hold objects to be removed
     const objectsToRemove = [];
@@ -135,7 +140,7 @@ export default class SceneManager extends EventEmitter
     // Traverse through all objects in the scene
     this.scene.traverse((child) => {
         // Check for common object types like Mesh, Points, Line, etc.
-        if (child instanceof THREE.Mesh || child instanceof THREE.Points || child instanceof THREE.Line) {
+        if  (child instanceof THREE.Mesh || child instanceof THREE.Points || child instanceof THREE.Line || child instanceof THREE.Group) {
             // Dispose of geometry if present
             if (child.geometry) {
                 child.geometry.dispose();
