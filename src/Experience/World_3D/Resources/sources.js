@@ -1,11 +1,10 @@
 export default 
 [
-    {
-        name: 'buddy',
-        type: 'gltfModel',
-        path: 'models/buddy/buddy.glb'
-
-    },
+//{
+    //     name: 'raptoid',
+    //     type: 'gltfModel',
+    //     path: 'models/raptoid/raptoid.glb'
+    // },
     //  {
     //     name: 'shiva',
     //     type: 'gltfModel',

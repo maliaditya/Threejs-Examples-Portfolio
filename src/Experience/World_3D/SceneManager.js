@@ -8,6 +8,7 @@ import GalaxyScene from "./Scenes/GalaxyScene";
 import RagingSeaScene from "./Scenes/RagingSeaScene";
 import HolographicCanineScene from "./Scenes/HolographicCanineScene";
 import CosmicShivaScene from "./Scenes/CosmicShivaScene";
+import WoblySphereScene from "./Scenes/WoblySphereScene";
 
 export default class SceneManager extends EventEmitter
 {
@@ -29,9 +30,10 @@ export default class SceneManager extends EventEmitter
         
         this.setScenes('Galaxy',GalaxyScene);
         this.setScenes('Raging_Sea', RagingSeaScene);
+        //this.setScenes('ModelLoading',HolographicCanineScene)
+        //this.setScenes('WoblySphere',WoblySphereScene)
+        
         //this.setScenes('CosmicShiva',CosmicShivaScene )
-        this.setScenes('ModelLoading',HolographicCanineScene)
-
         //this.setScenes('Test_Cube',TestCubeScene);    
 
         this.setTriggerSceneInstance()

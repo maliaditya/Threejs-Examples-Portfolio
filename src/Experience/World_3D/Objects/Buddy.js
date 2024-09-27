@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import Experience from '../../Experience'
-
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
+import holographicVertexShader from '../Shaders/HolographicCanine/vertex.glsl'
+import holographicFragmentShader from '../Shaders/HolographicCanine/fragment.glsl'
 
 export default class Buddy
 {
@@ -12,7 +14,7 @@ export default class Buddy
         this.time  = this.experience.time
 
         // Setups 
-        this.resource = this.resources.items.buddy
+        this.resource = this.resources.items.raptoid
         this.setModel()
         this.setMaterial()
         this.setAnimation()
@@ -20,12 +22,28 @@ export default class Buddy
 
     setModel() 
     {
-        this.model = this.resource.scene
-        this.model.position.set(0,-0.5,0)
+        this.model = this.resources.items.raptoid.scene
+        this.model.position.set(0,-0.1,0)
     }
 
     setMaterial() 
-    {   
+    { 
+        //   this.material = new CustomShaderMaterial({
+        // baseMaterial : THREE.MeshBasicMaterial,
+        // vertexShader: holographicVertexShader,
+        // fragmentShader: holographicFragmentShader,
+        // uniforms:{
+        //     uTime: {value:0}
+        // }
+        // })
+  
+        // this.model.traverse((child)=>{
+        //     this.mesh = child
+        //     if(child.isMesh)
+        //         child.material = this.material
+        // })
+    
+
         this.scene.add(this.model)
     }
 
@@ -51,6 +69,9 @@ export default class Buddy
     update() 
     {
         this.animation.mixer.update(this.time.delta * 0.001)
+        this.model.rotation.y += 0.01
+
+        this.material.uniforms.uTime.value += this.time.elapsed
     }
 
     destroy()

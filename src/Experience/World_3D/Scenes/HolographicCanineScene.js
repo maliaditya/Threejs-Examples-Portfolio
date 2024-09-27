@@ -1,5 +1,6 @@
 import Buddy from '../Objects/Buddy'
 import Experience from '../../Experience';
+
 export default class HolographicCanineScene
 {
     constructor() {
@@ -15,7 +16,6 @@ export default class HolographicCanineScene
         this.camera.perspectiveCamera.position.set(0,0,2)
         this.camera.update()
     }
-
 
     update()
     {
