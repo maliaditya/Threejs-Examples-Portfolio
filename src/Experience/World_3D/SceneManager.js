@@ -3,12 +3,12 @@ import Experience from "../Experience";
 import * as THREE from 'three'
 
 // scenes
-import TestCubeScene from "./Scenes/TestCubeScene";
+// import TestCubeScene from "./Scenes/TestCubeScene";
 import GalaxyScene from "./Scenes/GalaxyScene";
 import RagingSeaScene from "./Scenes/RagingSeaScene";
-import HolographicCanineScene from "./Scenes/HolographicCanineScene";
-import CosmicShivaScene from "./Scenes/CosmicShivaScene";
-import WoblySphereScene from "./Scenes/WoblySphereScene";
+// import HolographicCanineScene from "./Scenes/HolographicCanineScene";
+// import CosmicShivaScene from "./Scenes/CosmicShivaScene";
+// import WoblySphereScene from "./Scenes/WoblySphereScene";
 
 export default class SceneManager extends EventEmitter
 {

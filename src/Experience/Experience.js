@@ -43,10 +43,10 @@ export default class Experience
 					this.update()
 				})
 
-		this.resources.on('ready',()=>{
-			this.sceneManager = new SceneManager()
-			this.resourcesLoaded = true
-		})
+		// this.resources.on('ready',()=>{
+		// 	this.sceneManager = new SceneManager()
+		// 	this.resourcesLoaded = true
+		// })
 	}
 
 	resize()
