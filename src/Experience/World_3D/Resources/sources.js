@@ -1,10 +1,10 @@
 export default 
 [
-//{
-    //     name: 'raptoid',
-    //     type: 'gltfModel',
-    //     path: 'models/raptoid/raptoid.glb'
-    // },
+    {
+        name: 'raptoid',
+        type: 'gltfModel',
+        path: 'models/raptoid/raptoid.glb'
+    },
     //  {
     //     name: 'shiva',
     //     type: 'gltfModel',

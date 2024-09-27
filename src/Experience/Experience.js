@@ -29,6 +29,7 @@ export default class Experience
 		this.camera = new Camera()
 		this.renderer = new Renderer()
 		this.resources = new Resources(sources)
+		this.sceneManager = new SceneManager()
 
 		this.resourcesLoaded = false;
 
@@ -59,10 +60,10 @@ export default class Experience
 		this.camera.update();
 		this.renderer.update();
 
-		if(this.resourcesLoaded)
-		{
-			this.sceneManager.update();
-		}
+		// if(this.resourcesLoaded)
+		// {
+		// }
+		this.sceneManager.update();
 	}
 
 
