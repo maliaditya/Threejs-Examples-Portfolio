@@ -1,14 +1,18 @@
 import * as THREE from 'three'
 
 // Setup
+import Resources from './World_3D/Resources/Resources'
+import sources from './World_3D/Resources/sources'
+import SceneManager from './World_3D/SceneManager'
+
 import Renderer from './Setup/Renderer'
 import Camera from './Setup/Camera'
-import Sizes from './Utils/Sizes'
+
 import Debug from './Utils/Debug'
-import SceneManager from './World_3D/SceneManager'
-import Resources from './World_3D/Resources/Resources'
+import Sizes from './Utils/Sizes'
 import Time from './Utils/Time'
-import sources from './World_3D/Resources/sources'
+import FBO from './Utils/graphics/FBO'
+
 let instance = null
 
 export default class Experience
@@ -18,52 +22,50 @@ export default class Experience
 		// singelton
 		if(instance)
 			return instance
-		
+																	
 		instance = this
 
-		this.debug = new Debug()
 		this.canvas = canvas
-		this.sizes =  new Sizes()
 		this.time = new Time()
+		this.debug = new Debug()
+		this.sizes =  new Sizes()
 		this.scene  = new THREE.Scene()
+		this.orthoScene  = new THREE.Scene()
 		this.camera = new Camera()
 		this.renderer = new Renderer()
+		this.fbo = new FBO()
 		this.resources = new Resources(sources)
-		this.sceneManager = new SceneManager()
+		
+		if(sources.length>0)
+		{
 
-		this.resourcesLoaded = false;
-
-		this.sizes.on('resize', ()=>{
-				this.resize();
-				
+			this.resources.on('ready',()=>{
+				this.sceneManager = new SceneManager()
+				this.sizes.on('resize', ()=>{ this.resize() } )
+				this.time.on('tick', () => { this.update() } )
 			})
+		}
 			
-		this.time.on('tick', () =>
-				{
-					this.update()
-				})
-
-		// this.resources.on('ready',()=>{
-		// 	this.sceneManager = new SceneManager()
-		// 	this.resourcesLoaded = true
-		// })
 	}
 
 	resize()
 	{
 	this.camera.resize();
-	this.renderer.resize();		
+	this.renderer.resize();
+	this.sceneManager.resize();	
+	 this.fbo.updateSpritePosition();	
 	}
 
 	update()
 	{
 		this.camera.update();
 		this.renderer.update();
-
-		// if(this.resourcesLoaded)
-		// {
-		// }
 		this.sceneManager.update();
+		
+		//this.renderer.instance.autoClear = false;  // Prevent automatic clearing
+   		//this.fbo.renderToFBO();          // Render the FBO texture last
+    	//this.renderer.instance.autoClear = true;   // Restore clearing behavior for the next frame
+		
 	}
 
 

@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
 
+
 export default class Renderer
 {
     constructor () {
@@ -10,16 +11,17 @@ export default class Renderer
         this.scene = this.experience.scene
         this.camera  = this.experience.camera
         this.sizes = this.experience.sizes
-        
+        this.instance = new THREE.WebGLRenderer({
+            canvas: this.canvas
+        })
         this.setInstance()
+       
     }
 
     setInstance() {
 
         // Code
-        this.instance = new THREE.WebGLRenderer({
-            canvas: this.canvas
-        })
+        
         this.instance.setSize(this.sizes.width, this.sizes.height)
         this.instance.setPixelRatio(Math.min(window.devicePixelRatio,2))
     }
@@ -33,6 +35,7 @@ export default class Renderer
     update()
     {
         this.instance.render( this.scene, this.camera.perspectiveCamera)
+
     }
 
 }

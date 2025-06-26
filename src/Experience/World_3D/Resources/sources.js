@@ -3,7 +3,12 @@ export default
     {
         name: 'raptoid',
         type: 'gltfModel',
-        path: 'models/raptoid/raptoid.glb'
+        path: 'models/morphing/models.glb'
+    },
+      {
+        name: 'boat',
+        type: 'gltfModel',
+        path: 'models/boat/model.glb'
     },
     //  {
     //     name: 'shiva',
@@ -18,3 +23,4 @@ export default
     // }
 
 ]
+

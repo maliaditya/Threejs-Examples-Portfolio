@@ -3,12 +3,11 @@ import Experience from "../Experience";
 import * as THREE from 'three'
 
 // scenes
-// import TestCubeScene from "./Scenes/TestCubeScene";
+ import TestCubeScene from "./Scenes/TestCubeScene";
 import GalaxyScene from "./Scenes/GalaxyScene";
 import RagingSeaScene from "./Scenes/RagingSeaScene";
-// import HolographicCanineScene from "./Scenes/HolographicCanineScene";
-// import CosmicShivaScene from "./Scenes/CosmicShivaScene";
-// import WoblySphereScene from "./Scenes/WoblySphereScene";
+import WaterScene from "./Scenes/WaterScene";
+import FlowFieldScene from "./Scenes/FlowFieldScene";
 
 export default class SceneManager extends EventEmitter
 {
@@ -28,19 +27,17 @@ export default class SceneManager extends EventEmitter
         // sceneManager will store objects 
         this.sceneManager = {}
         
-        this.setScenes('Galaxy',GalaxyScene);
+        this.setScenes('Galaxy', GalaxyScene);
         this.setScenes('Raging_Sea', RagingSeaScene);
-        //this.setScenes('ModelLoading',HolographicCanineScene)
-        //this.setScenes('WoblySphere',WoblySphereScene)
-        
-        //this.setScenes('CosmicShiva',CosmicShivaScene )
-        //this.setScenes('Test_Cube',TestCubeScene);    
+        this.setScenes('Test_Cube', TestCubeScene);
+        this.setScenes('WaterScene', WaterScene);
+        this.setScenes('FlowFieldScene', FlowFieldScene);
 
         this.setTriggerSceneInstance()
 
         if (!window.location.hash) 
         {
-            this.trigger('Galaxy'); // Default scene
+            this.trigger('Raging_Sea'); // Default scene
         } 
         else 
         {
@@ -68,9 +65,9 @@ export default class SceneManager extends EventEmitter
                 this.destroy(); // Assuming this destroys the current scene
                 this.sceneManager[sceneName].obj = new SceneClass();
                 this.currentScene = sceneName
-                    
-                            // Reset uTime when a new scene is created
-           const currentSceneObj = this.sceneManager[sceneName].obj;
+
+            // Reset uTime when a new scene is created
+            const currentSceneObj = this.sceneManager[sceneName].obj;
             if (currentSceneObj.material && 
                 currentSceneObj.material.uniforms && 
                 currentSceneObj.material.uniforms.uTime) {
@@ -84,6 +81,7 @@ export default class SceneManager extends EventEmitter
 
     setTriggerSceneInstance() {
         // Create an empty object to store the callback references for the GUI
+
         this.obj = {};
         if (this.debug.active) {
             // Loop through each category in the base callbacks
@@ -100,7 +98,6 @@ export default class SceneManager extends EventEmitter
                     {
                          this.trigger(category)
                     }
-
                 }
             }
         } else {
@@ -109,90 +106,97 @@ export default class SceneManager extends EventEmitter
         }
     }
 
-    update()
+    resize()
     {
-       
-
+        // code
+        console.log("In Scene manager Resizes")
         for(let scene in this.sceneManager)
             {   
-            if(this.sceneManager[scene].obj )
+            if(this.sceneManager[scene].obj && typeof this.sceneManager[scene].obj.resize === 'function')
             {
-               this.sceneManager[scene].obj.update()
+                this.sceneManager[scene].obj.resize()
             }
         }
-       
-            
     }
+
+    update()
+    {
+        for(let scene in this.sceneManager)
+            {   
+            if(this.sceneManager[scene].obj && typeof this.sceneManager[scene].obj.update === 'function')
+            {
+                this.sceneManager[scene].obj.update()
+            }
+        }
+    }
+
+
 
    destroy() {   
-    console.log("Destroying current scene...");
+            console.log("Destroying current scene...");
 
-    // Remove references to the current scene from the scene manager
-    if (this.currentScene) {
-        this.sceneManager[this.currentScene].obj.destroy()
-        this.sceneManager[this.currentScene].obj = null;
-        this.currentScene = null;
-    }
-
-    
-
-    // Create an array to hold objects to be removed
-    const objectsToRemove = [];
-
-    // Traverse through all objects in the scene
-    this.scene.traverse((child) => {
-        // Check for common object types like Mesh, Points, Line, etc.
-        if  (child instanceof THREE.Mesh || child instanceof THREE.Points || child instanceof THREE.Line || child instanceof THREE.Group) {
-            // Dispose of geometry if present
-            if (child.geometry) {
-                child.geometry.dispose();
+            // Remove references to the current scene from the scene manager
+            if (this.currentScene) {
+                if(typeof this.sceneManager[this.currentScene].obj.destroy === 'function')
+                    this.sceneManager[this.currentScene].obj.destroy()
+                this.sceneManager[this.currentScene].obj = null;
+                this.currentScene = null;
             }
 
-            // Dispose of material if present and ensure proper disposal of textures
-            if (child.material) {
-                if (Array.isArray(child.material)) {
-                    // If material is an array, dispose of each material
-                    child.material.forEach((material) => {
-                        this.disposeMaterial(material);
-                    });
-                } else {
-                    // Dispose of a single material
-                    this.disposeMaterial(child.material);
+            // Create an array to hold objects to be removed
+            const objectsToRemove = [];
+            
+            // Traverse through all objects in the scene
+            this.scene.traverse((child) => {
+                // Check for common object types like Mesh, Points, Line, etc.
+                if  (child instanceof THREE.Mesh || child instanceof THREE.Points || child instanceof THREE.Line || child instanceof THREE.Group) {
+                    // Dispose of geometry if present
+                    if (child.geometry) {
+                        child.geometry.dispose();
+                    }
+                    // Dispose of material if present and ensure proper disposal of textures
+                    if (child.material) {
+                        if (Array.isArray(child.material)) {
+                            // If material is an array, dispose of each material
+                            child.material.forEach((material) => {
+                                this.disposeMaterial(material);
+                            });
+                        } else {
+                            // Dispose of a single material
+                            this.disposeMaterial(child.material);
+                        }
+                    }
+                    // Add child to the list of objects to remove
+                    objectsToRemove.push(child);
                 }
+            });
+            // Remove the collected objects from the scene
+            objectsToRemove.forEach((object) => {
+                this.scene.remove(object);
+            });
+            // reset camera positions
+            this.resetCamera()
+            console.log("Objects removed from scene:", objectsToRemove);
+        }
+
+    disposeMaterial(material) 
+    {
+        // Check if the material has any texture maps and dispose them
+        for (const key in material) {
+            const value = material[key];
+            if (value && typeof value.dispose === 'function') {
+                value.dispose();
             }
+        }   
+        // Dispose of the material itself
+        material.dispose();
+    }   
 
-            // Add child to the list of objects to remove
-            objectsToRemove.push(child);
-        }
-    });
-
-    // Remove the collected objects from the scene
-    objectsToRemove.forEach((object) => {
-        this.scene.remove(object);
-    });
-
-    // reset camera positions
-    this.resetCamera()
-
-    console.log("Objects removed from scene:", objectsToRemove);
-}
-
-disposeMaterial(material) {
-    // Check if the material has any texture maps and dispose them
-    for (const key in material) {
-        const value = material[key];
-        if (value && typeof value.dispose === 'function') {
-            value.dispose();
-        }
+    resetCamera() 
+    {
+            this.camera.perspectiveCamera.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z)
+            this.camera.update()
     }
 
-    // Dispose of the material itself
-    material.dispose();
-}
-
-resetCamera() {
-    this.camera.perspectiveCamera.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z)
-    this.camera.update()
-}
 
 }

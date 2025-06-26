@@ -1,12 +1,14 @@
-import Water from '../Objects/Water'
-import Experience from '../../Experience';
+import Sea from '../Objects/Sea.js'
+import Experience from '../../Experience.js';
 export default class RagingSea
 {
     constructor()
     {
         this.experience = new Experience()
-        this.camera =  this.experience.camera
-        this.water = new Water()
+        this.Sea = new Sea()
+
+        this.experience.camera.perspectiveCamera.position.set(0,1,1)
+        this.experience.camera.update()
 
         this.update()
         this.setCamera()
@@ -14,8 +16,7 @@ export default class RagingSea
 
     setCamera()
     {
-         this.camera.perspectiveCamera.position.set(0,1,1)
-         this.camera.update()
+       
     }
 
     destroy()
@@ -23,8 +24,13 @@ export default class RagingSea
         
     }
 
+    resize()
+    {
+    
+    }
+
     update()
     {
-        this.water.update()
+        this.Sea.update()
     }
 }

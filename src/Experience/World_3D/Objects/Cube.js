@@ -6,8 +6,9 @@ export default class Cube
 {
     constructor() {
 
-
         this.experience = new Experience()
+        this.texture = this.experience.fbo.texture
+        this.renderer = this.experience.renderer.instance
         this.scene = this.experience.scene
         this.time = this.experience.time
 
@@ -22,11 +23,14 @@ export default class Cube
     setGeometry()
     {
         this.geometry = new THREE.BoxGeometry(1,1,1,1)
+
+        // Create a Clipping Plane
+        // Enable clipping globally
     }
 
     setMaterial()
     {
-        this.material = new THREE.MeshBasicMaterial({color:0x0000ff})
+        this.material = new THREE.MeshBasicMaterial({ color:"#00ff00"})
     }
 
     setMesh()

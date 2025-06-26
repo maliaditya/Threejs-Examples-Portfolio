@@ -13,6 +13,8 @@ export default class Time extends EventEmitter
         this.elapsed = 0
         this.clock = new THREE.Clock()
         this.elapsedTime = 0
+        this.previousTime = 0
+        this.deltaTime = 16
 
         requestAnimationFrame(()=>{
             this.tick()
@@ -26,13 +28,11 @@ export default class Time extends EventEmitter
         this.current = currentTime
         this.elapsed = this.current - this.start
         this.elapsedTime = this.clock.getElapsedTime()
-
+        this.deltaTime = this.elapsedTime - this.previousTime
+        this.previousTime = this.elapsedTime
+        
         this.trigger('tick')
-
-        window.requestAnimationFrame(() =>
-        {
-            this.tick()
-        })
+        window.requestAnimationFrame(()=>{this.tick()})
     }
 
     reset()
@@ -42,6 +42,8 @@ export default class Time extends EventEmitter
         this.delta = 16;
         this.elapsed = 0;
         this.elapsedTime = this.clock.getElapsedTime()
-
+         this.deltaTime = this.elapsedTime - this.previousTime
+        this.previousTime = this.elapsedTime
     }
+
 }

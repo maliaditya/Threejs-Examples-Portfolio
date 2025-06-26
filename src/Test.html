@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js GPGPU Example (WebGL 1.0)</title>
+  <style> 
+    body { margin: 0; overflow: hidden; } 
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
+
+    // Setup renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Create a scene and orthographic camera for GPGPU processing
+    const computeScene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    // Texture resolution
+    const size = 512;
+
+    // Initialize data texture with random values
+    const data = new Float32Array(size * size * 4); // RGBA Float32 Texture
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = Math.random();        // R
+      data[i + 1] = Math.random();    // G
+      data[i + 2] = Math.random();    // B
+      data[i + 3] = 1.0;              // Alpha
+    }
+    const dataTexture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat, THREE.FloatType);
+    dataTexture.needsUpdate = true;
+
+    // Create render target for computation results
+    const renderTarget = new THREE.WebGLRenderTarget(size, size, {
+      format: THREE.RGBAFormat,
+      type: THREE.FloatType,
+      minFilter: THREE.NearestFilter,
+      magFilter: THREE.NearestFilter,
+    });
+
+    // Shader for computation   
+    const computeMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        inputTexture: { value: dataTexture },
+        time: { value: 0.0 }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D inputTexture;
+        uniform float time;
+        varying vec2 vUv;
+
+        void main() {
+          vec4 color = texture2D(inputTexture, vUv);
+          // Modify color data (simple time-based animation)
+          float red = 0.5 + 0.5 * sin(time + color.r * 6.2831);
+          float green = 0.5 + 0.5 * cos(time + color.g * 6.2831);
+          float blue = 0.5 + 0.5 * sin(time * 0.5 + color.b * 3.1415);
+          
+          gl_FragColor = vec4(red, green, blue, 1.0);
+        }
+      `
+    });
+
+    // Fullscreen quad to perform computation
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), computeMaterial);
+    computeScene.add(quad);
+
+    // Display the computed texture in the main scene
+    const displayMaterial = new THREE.MeshBasicMaterial({ map: renderTarget.texture });
+    const displayMesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), displayMaterial);
+    const scene = new THREE.Scene();
+    scene.add(displayMesh);
+
+    // Animation loop
+    function animate() {
+      computeMaterial.uniforms.time.value += 0.01;
+
+      // Perform GPGPU computation
+      renderer.setRenderTarget(renderTarget);
+      renderer.render(computeScene, camera);
+
+      // Render the result to screen
+      renderer.setRenderTarget(null);
+      renderer.render(scene, camera);
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

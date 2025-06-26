@@ -12,7 +12,6 @@ export default class Particle
     this.time =  this.experience.time
     this.renderer = this.experience.renderer
 
-
     this.parameters = {}
     this.parameters.count = 500000
     this.parameters.size = 0.005
@@ -36,6 +35,7 @@ export default class Particle
         // Create
         this.geometry = new THREE.BufferGeometry()
         
+        // Create a Clipping Plane
         this.positions =  new Float32Array(this.parameters.count * 3) // 1 vertice = 3 = xyz
         this.colors = new Float32Array(this.parameters.count * 3) // rgb
         this.scales = new Float32Array(this.parameters.count * 1)
@@ -59,7 +59,6 @@ export default class Particle
             const randomY = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : - 1) * this.parameters.randomness * radius
             const randomZ = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : - 1) * this.parameters.randomness * radius
             
-            
             this.randomness[i3 ] = randomX
             this.randomness[i3 +1] = randomY
             this.randomness[i3 +2] = randomZ
@@ -75,9 +74,6 @@ export default class Particle
             // scales
             this.scales[i]= Math.random()
         }
-
-
-
 
         // set attribute
         this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions,3))
@@ -99,10 +95,9 @@ export default class Particle
             uSize:new THREE.Uniform(40 * this.renderer.instance.getPixelRatio()),
             uTime: new THREE.Uniform(0.2)
         }
-
+                
         })
     }
-
 
     setMesh()
     {
@@ -114,7 +109,6 @@ export default class Particle
     update()
     {   
         this.material.uniforms.uTime.value = this.time.elapsed
-
     }   
 
 
